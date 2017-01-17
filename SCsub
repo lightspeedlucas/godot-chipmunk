@@ -1,4 +1,47 @@
-# SCsub
-Import('env')
+#!/usr/bin/env python
 
-env.add_source_files(env.modules_sources,"*.cpp") # just add all cpp files to the build
+Import('env')
+Import('env_modules')
+
+env_chipmunk = env_modules.Clone()
+
+# Chipmunk source files
+chipmunk_sources = [
+    "lib/src/chipmunk.c",
+    "lib/src/cpArbiter.c",
+    "lib/src/cpArray.c",
+    "lib/src/cpBBTree.c",
+    "lib/src/cpBody.c",
+    "lib/src/cpCollision.c",
+    "lib/src/cpConstraint.c",
+    "lib/src/cpDampedRotarySpring.c",
+    "lib/src/cpDampedSpring.c",
+    "lib/src/cpGearJoint.c",
+    "lib/src/cpGrooveJoint.c",
+    "lib/src/cpHashSet.c",
+    "lib/src/cpPinJoint.c",
+    "lib/src/cpPivotJoint.c",
+    "lib/src/cpPolyShape.c",
+    "lib/src/cpRatchetJoint.c",
+    "lib/src/cpRobust.c",
+    "lib/src/cpRotaryLimitJoint.c",
+    "lib/src/cpShape.c",
+    "lib/src/cpSimpleMotor.c",
+    "lib/src/cpSlideJoint.c",
+    "lib/src/cpSpace.c",
+    "lib/src/cpSpaceComponent.c",
+    "lib/src/cpSpaceDebug.c",
+    "lib/src/cpSpaceHash.c",
+    "lib/src/cpSpaceQuery.c",
+    "lib/src/cpSpaceStep.c",
+    "lib/src/cpSpatialIndex.c",
+    "lib/src/cpSweep1D.c"
+]
+
+env_chipmunk.add_source_files(env.modules_sources, chipmunk_sources)
+
+# Chipmunk include path
+env_chipmunk.Append(CPPPATH=["lib/include"])
+
+# Integration source files
+env_chipmunk.add_source_files(env.modules_sources,"*.cpp")
