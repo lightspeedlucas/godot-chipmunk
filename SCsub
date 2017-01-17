@@ -45,3 +45,6 @@ env_chipmunk.Append(CPPPATH=["lib/include"])
 
 # Integration source files
 env_chipmunk.add_source_files(env.modules_sources,"*.cpp")
+
+# Compilation flags
+env_chipmunk.Append(CPPFLAGS=['-DCP_USE_DOUBLES=0'])
