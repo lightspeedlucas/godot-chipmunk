@@ -1,6 +1,6 @@
 ## Chipmunk 2D integration module for Godot Engine
 
-A simple C++ module integrating the Chipmunk 2D physics library into Godot Engine. **Development is still very in early stages, everything is untested.**
+A simple C++ module integrating the Chipmunk 2D physics library into Godot Engine. **Development is still in very early stages, everything is untested.**
 
 - Godot: https://godotengine.org
 - Chipmunk 2D: http://chipmunk-physics.net
@@ -11,7 +11,7 @@ Godot Engine already contains a very good, albeit simple, 2D physics engine impl
 
 ### Features
 
-- Integrates into Godot as a C++ module.
+- Integrates Chipmunk2D 7.0.1 into Godot as a C++ module.
 - No setup required. If you can build Godot from source, you can use this module.
 - Does not disable or replace Godot's 2D physics engine.
 - Provides GDScript bindings through `ChipmunkServer`, a singleton not unlike Godot's own `Physics2DServer`.
