@@ -23,6 +23,7 @@
 #define CHIPMUNK_TYPES_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <float.h>
 #include <math.h>
 
@@ -175,17 +176,17 @@ typedef uint32_t cpCollisionID;
 #ifdef CP_BOOL_TYPE
 	typedef CP_BOOL_TYPE cpBool;
 #else
-	typedef unsigned char cpBool;
+	typedef bool cpBool;
 #endif
 
 #ifndef cpTrue
 /// true value.
-	#define cpTrue 1
+	#define cpTrue true
 #endif
 
 #ifndef cpFalse
 /// false value.
-	#define cpFalse 0
+	#define cpFalse false
 #endif
 
 #ifdef CP_DATA_POINTER_TYPE
