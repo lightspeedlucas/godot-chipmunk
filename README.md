@@ -20,8 +20,13 @@ Godot Engine already contains a very good, albeit simple, 2D physics engine impl
 ### How to Use
 
 - Clone the contents of this repository into `<Your Godot source folder>/modules/chipmunk`
+  - Please note that this project is meant to be used with Godot's **2.1** branch.
 - Build and run Godot normally
+
+### License
+
+Released under the [MIT License](LICENSE).
 
 ### To Do
 
-See [TODO](TODO.md)
+See [TODO](TODO.md).
