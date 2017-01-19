@@ -15,7 +15,6 @@ The following functions are missing bindings on `ChipmunkServer` and therefore c
 - cpSpaceAddWildcardHandler
 - cpSpaceAddPostStepCallback
 - cpSpacePointQuery
-- cpSpacePointQueryNearest
 - cpSpaceSegmentQuery
 - cpSpaceSegmentQueryFirst
 - cpSpaceBBQuery

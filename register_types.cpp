@@ -15,6 +15,9 @@ void register_chipmunk_types()
     // initialize server
     memnew(ChipmunkServer);
 
+    // register auxiliary types
+    ObjectTypeDB::register_type<ChipmunkShapeFilter>();
+
     // register server
     Globals::get_singleton()->add_singleton(Globals::Singleton("ChipmunkServer", ChipmunkServer::get_singleton()));
 }

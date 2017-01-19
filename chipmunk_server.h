@@ -1,19 +1,11 @@
-#ifndef CHIPMUNK_SERVER_H
-#define CHIPMUNK_SERVER_H
+#ifndef GODOT_CHIPMUNK_SERVER_H
+#define GODOT_CHIPMUNK_SERVER_H
 
 #include "object.h"
 #include "reference.h"
 
 #include "chipmunk/chipmunk.h"
-
-struct ChipmunkShapeFilter
-{
-    int group, categories, mask;
-
-    ChipmunkShapeFilter() {}
-    ChipmunkShapeFilter(const cpShapeFilter &cp) : group(cp.group), categories(cp.categories), mask(cp.mask) {}
-    operator cpShapeFilter() const { return cpShapeFilterNew(group, categories, mask); }
-};
+#include "chipmunk_structs.h"
 
 class ChipmunkServer : public Object
 {
@@ -78,6 +70,8 @@ public:
     void space_reindex_shapes_for_body(RID p_space, RID p_body);
     void space_use_spatial_hash(RID p_space, float p_dim, int p_count);
     void space_step(RID p_space, float p_dt);
+
+    Dictionary space_point_query_nearest(RID p_space, Vector2 p_point, float p_maxDistance, const Ref<ChipmunkShapeFilter> &p_filter);
 
     /** Body */
     RID body_new(float p_mass, float p_moment);

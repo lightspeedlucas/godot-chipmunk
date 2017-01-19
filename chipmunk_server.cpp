@@ -1,5 +1,6 @@
 
 #include "chipmunk_server.h"
+#include "chipmunk_structs.h"
 #include "print_string.h"
 
 ChipmunkServer *ChipmunkServer::singleton = NULL;
@@ -253,6 +254,24 @@ void ChipmunkServer::space_step(RID p_space, float p_dt)
 {
 	auto *space = space_owner.get(p_space);
 	cpSpaceStep(space, p_dt);
+}
+
+Dictionary ChipmunkServer::space_point_query_nearest(RID p_space, Vector2 p_point, float p_maxDistance, const Ref<ChipmunkShapeFilter> &p_filter)
+{
+    cpPointQueryInfo info;
+    auto *space = space_owner.get(p_space);
+    auto *shape = cpSpacePointQueryNearest(space, CP(p_point), p_maxDistance, **p_filter, &info);
+    Dictionary r(true);
+	if (!shape)
+    {
+        auto *data = (GodotDataRef*)cpShapeGetUserData(shape);
+        r["shape"] = data->get().rid;
+        r["point"] = GD(info.point);
+        r["distance"] = info.distance;
+        r["gradient"] = GD(info.gradient);
+        r["metadata"] = data->get().metadata;
+    }
+	return r;
 }
 
 /**********************************************************************/
@@ -998,6 +1017,8 @@ void ChipmunkServer::_bind_methods()
     ObjectTypeDB::bind_method(_MD("space_reindex_shapes_for_body", "space", "body"), &ChipmunkServer::space_reindex_shapes_for_body);
     ObjectTypeDB::bind_method(_MD("space_use_spatial_hash", "space", "dim", "count"), &ChipmunkServer::space_use_spatial_hash);
     ObjectTypeDB::bind_method(_MD("space_step", "space", "dt"), &ChipmunkServer::space_step);
+
+    ObjectTypeDB::bind_method(_MD("space_point_query_nearest", "space", "point", "maxDistance", "filter"), &ChipmunkServer::space_point_query_nearest);
 
     /** Body */
     ObjectTypeDB::bind_method(_MD("body_new", "mass", "moment"), &ChipmunkServer::body_new);
