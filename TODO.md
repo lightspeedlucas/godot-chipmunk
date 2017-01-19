@@ -32,16 +32,11 @@ The following functions are missing bindings on `ChipmunkServer` and therefore c
 - cpBodySetUserData
 - cpBodySetVelocityUpdateFunc
 - cpBodySetPositionUpdateFunc
-- cpBodyEachShape
-- cpBodyEachConstraint
 - cpBodyEachArbiter
 
 ### On cpShape.h
 
 - cpShapeDestroy
-- cpShapePointQuery
-- cpShapeSegmentQuery
-- cpShapesCollide
 - cpShapeGetUserData
 - cpShapeSetUserData
 - cpCircleShapeAlloc

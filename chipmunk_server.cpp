@@ -569,6 +569,46 @@ float ChipmunkServer::body_kinetic_energy(RID p_body)
 	return cpBodyKineticEnergy(body);
 }
 
+Array ChipmunkServer::body_get_shapes(RID p_body)
+{
+    struct Local
+    {
+        static void cb(cpBody *body, cpShape *shape, void *user_data)
+        {
+            auto *data = (GodotDataRef*)cpShapeGetUserData(shape);
+            Dictionary d(true);
+            d["shape"] = data->get().rid;
+            d["metadata"] = data->get().metadata;
+            ((Array*)user_data)->push_back(d);
+        }
+    };
+
+    Array r;
+    auto *body = body_owner.get(p_body);
+    cpBodyEachShape(body, &Local::cb, &r);
+	return r;
+}
+
+Array ChipmunkServer::body_get_constraints(RID p_body)
+{
+    struct Local
+    {
+        static void cb(cpBody *body, cpConstraint *constraint, void *user_data)
+        {
+            auto *data = (GodotDataRef*)cpConstraintGetUserData(constraint);
+            Dictionary d(true);
+            d["constraint"] = data->get().rid;
+            d["metadata"] = data->get().metadata;
+            ((Array*)user_data)->push_back(d);
+        }
+    };
+
+    Array r;
+    auto *body = body_owner.get(p_body);
+    cpBodyEachConstraint(body, &Local::cb, &r);
+	return r;
+}
+
 /**********************************************************************/
 // Shape
 
@@ -591,6 +631,54 @@ Rect2 ChipmunkServer::shape_update(RID p_shape, Matrix32 p_transform)
 {
 	auto *shape = shape_owner.get(p_shape);
 	return GD(cpShapeUpdate(shape, CP(p_transform)));
+}
+
+Dictionary ChipmunkServer::shape_point_query(RID p_shape, Vector2 p_p)
+{
+    cpPointQueryInfo info;
+    auto *shape = shape_owner.get(p_shape);
+    cpShapePointQuery(shape, CP(p_p), &info);
+    Dictionary r(true);
+    r["point"] = GD(info.point);
+    r["distance"] = info.distance;
+    r["gradient"] = GD(info.gradient);
+	return r;
+}
+
+Dictionary ChipmunkServer::shape_segment_query(RID p_shape, Vector2 p_a, Vector2 p_b, float p_radius)
+{
+    cpSegmentQueryInfo info;
+    auto *shape = shape_owner.get(p_shape);
+    auto hit = cpShapeSegmentQuery(shape, CP(p_a), CP(p_b), p_radius, &info);
+    Dictionary r(true);
+    if (hit)
+    {
+        r["point"] = GD(info.point);
+        r["normal"] = GD(info.normal);
+        r["alpha"] = info.alpha;
+    }
+	return r;
+}
+
+Dictionary ChipmunkServer::shapes_collide(RID p_a, RID p_b)
+{
+    auto *a = shape_owner.get(p_a);
+    auto *b = shape_owner.get(p_b);
+    auto set = cpShapesCollide(a, b);
+    Dictionary r(true);
+    r["normal"] = GD(set.normal);
+    Array points;
+    points.resize(set.count);
+    for (int i = 0; i < set.count; ++i)
+    {
+        Dictionary d(true);
+        d["pointA"] = GD(set.points[i].pointA);
+        d["pointB"] = GD(set.points[i].pointB);
+        d["distance"] = set.points[i].distance;
+        points[i] = d;
+    }
+    r["points"] = points;
+    return r;
 }
 
 RID ChipmunkServer::shape_get_space(RID p_shape)
@@ -1098,11 +1186,16 @@ void ChipmunkServer::_bind_methods()
     ObjectTypeDB::bind_method(_MD("body_get_velocity_at_world_point", "body", "point"), &ChipmunkServer::body_get_velocity_at_world_point);
     ObjectTypeDB::bind_method(_MD("body_get_velocity_at_local_point", "body", "point"), &ChipmunkServer::body_get_velocity_at_local_point);
     ObjectTypeDB::bind_method(_MD("body_kinetic_energy", "body"), &ChipmunkServer::body_kinetic_energy);
+    ObjectTypeDB::bind_method(_MD("body_get_shapes", "body"), &ChipmunkServer::body_get_shapes);
+    ObjectTypeDB::bind_method(_MD("body_get_constraints", "body"), &ChipmunkServer::body_get_constraints);
 
     /** Shape */
     ObjectTypeDB::bind_method(_MD("shape_free", "shape"), &ChipmunkServer::shape_free);
     ObjectTypeDB::bind_method(_MD("shape_cache_bb", "shape"), &ChipmunkServer::shape_cache_bb);
     ObjectTypeDB::bind_method(_MD("shape_update", "shape", "transform"), &ChipmunkServer::shape_update);
+    ObjectTypeDB::bind_method(_MD("shape_point_query", "shape", "p"), &ChipmunkServer::shape_point_query);
+    ObjectTypeDB::bind_method(_MD("shape_segment_query", "shape", "a", "b", "radius"), &ChipmunkServer::shape_segment_query);
+    ObjectTypeDB::bind_method(_MD("shapes_collide", "a", "b"), &ChipmunkServer::shapes_collide);
     ObjectTypeDB::bind_method(_MD("shape_get_space", "shape"), &ChipmunkServer::shape_get_space);
     ObjectTypeDB::bind_method(_MD("shape_get_body", "shape"), &ChipmunkServer::shape_get_body);
     ObjectTypeDB::bind_method(_MD("shape_set_body", "shape", "body"), &ChipmunkServer::shape_set_body);

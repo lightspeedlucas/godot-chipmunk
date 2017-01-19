@@ -116,11 +116,16 @@ public:
     Vector2 body_get_velocity_at_world_point(RID p_body, Vector2 p_point);
     Vector2 body_get_velocity_at_local_point(RID p_body, Vector2 p_point);
     float body_kinetic_energy(RID p_body);
+    Array body_get_shapes(RID p_body);
+    Array body_get_constraints(RID p_body);
 
     /** Shape */
     void shape_free(RID p_shape);
     Rect2 shape_cache_bb(RID p_shape);
     Rect2 shape_update(RID p_shape, Matrix32 p_transform);
+    Dictionary shape_point_query(RID p_shape, Vector2 p_p);
+    Dictionary shape_segment_query(RID p_shape, Vector2 p_a, Vector2 p_b, float p_radius);
+    Dictionary shapes_collide(RID p_a, RID p_b);
     RID shape_get_space(RID p_shape);
     RID shape_get_body(RID p_shape);
     void shape_set_body(RID p_shape, RID p_body);
