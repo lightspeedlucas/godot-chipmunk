@@ -2,27 +2,34 @@
 #define GODOT_CHIPMUNK_BODY_H
 
 #include "object.h"
-#include "reference.h"
+#include "chipmunk_common.h"
 
-#include "chipmunk/chipmunk.h"
-
-class ChipmunkBody : public Reference
+class ChipmunkBody : public Object
 {
-    OBJ_TYPE(ChipmunkBody, Reference);
+    OBJ_TYPE(ChipmunkBody, Object);
 public:
+    /** Lifecycle */
     ChipmunkBody();
     ChipmunkBody(float, float);
+    ~ChipmunkBody();
 
-    void destroy();
+    /** Chipmunk methods */
+    void set_position_update_callback(Object *receiver, const StringName &method);
 
 protected:
+    /** Godot bindings */
 	static void _bind_methods();
-
     cpBody *body;
 
+private:
+    /** Callbacks */
+    ChipmunkCallbackBinding *position_cb;
+    static void PositionUpdateFunc(cpBody *body, cpFloat dt);
+
 public:
-    explicit ChipmunkBody(cpBody *body) : body(body) {}
+    /** Chipmunk interoperability */
     operator cpBody*() const { return body; }
+    static ChipmunkBody *get(cpBody*);
 };
 
 #endif

@@ -2,28 +2,25 @@
 #define GODOT_CHIPMUNK_SPACE_H
 
 #include "object.h"
-#include "reference.h"
+#include "chipmunk_common.h"
 
-#include "chipmunk/chipmunk.h"
-
-class ChipmunkBody;
-
-class ChipmunkSpace : public Reference
+class ChipmunkSpace : public Object
 {
-    OBJ_TYPE(ChipmunkSpace, Reference);
+    OBJ_TYPE(ChipmunkSpace, Object);
 public:
+    /** Lifecycle */
     ChipmunkSpace();
+    ~ChipmunkSpace();
 
-    void destroy();
-
-    // int get_iterations() const;
-    // void set_iterations(int);
+    /** Chipmunk methods */
+    int get_iterations() const;
+    void set_iterations(int);
 
     Vector2 get_gravity() const;
     void set_gravity(const Vector2&);
 
-    // float get_damping() const;
-    // void set_damping(float);
+    float get_damping() const;
+    void set_damping(float);
 
     // float get_idle_speed_threshold() const;
     // void set_idle_speed_threshold(float);
@@ -42,23 +39,24 @@ public:
 
     // Variant get_metadata() const;
     // void set_metadata(const Variant&);
-
-    // Ref<ChipmunkBody> get_static_body() const;
     
     // float get_current_timestep() const;
     // bool is_locked();
 
-    void add_body(const Ref<ChipmunkBody>&);
-    void remove_body(const Ref<ChipmunkBody>&);
+    void add_body(ChipmunkBody*);
+    void remove_body(ChipmunkBody*);
+
+    void step(float dt);
 
 protected:
+    /** Godot bindings */
 	static void _bind_methods();
-
     cpSpace *space;
 
 public:
-    explicit ChipmunkSpace(cpSpace *space) : space(space) {}
+    /** Chipmunk interoperability */
     operator cpSpace*() const { return space; }
+    static ChipmunkSpace *get(cpSpace*);
 };
 
 #endif
