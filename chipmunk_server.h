@@ -65,13 +65,13 @@ public:
     bool space_contains_shape(RID p_space, RID p_shape);
     bool space_contains_body(RID p_space, RID p_body);
     bool space_contains_constraint(RID p_space, RID p_constraint);
+    Array space_point_query(RID p_space, Vector2 p_point, float p_maxDistance, const Ref<ChipmunkShapeFilter> &p_filter);
+    Dictionary space_point_query_nearest(RID p_space, Vector2 p_point, float p_maxDistance, const Ref<ChipmunkShapeFilter> &p_filter);
     void space_reindex_static(RID p_space);
     void space_reindex_shape(RID p_space, RID p_shape);
     void space_reindex_shapes_for_body(RID p_space, RID p_body);
     void space_use_spatial_hash(RID p_space, float p_dim, int p_count);
     void space_step(RID p_space, float p_dt);
-
-    Dictionary space_point_query_nearest(RID p_space, Vector2 p_point, float p_maxDistance, const Ref<ChipmunkShapeFilter> &p_filter);
 
     /** Body */
     RID body_new(float p_mass, float p_moment);
@@ -142,6 +142,8 @@ public:
     void shape_set_surface_velocity(RID p_shape, Vector2 p_surfaceVelocity);
     int shape_get_collision_type(RID p_shape);
     void shape_set_collision_type(RID p_shape, int p_collisionType);
+    Ref<ChipmunkShapeFilter> shape_get_filter(RID p_shape);
+    void shape_set_filter(RID p_shape, const Ref<ChipmunkShapeFilter> &p_filter);
     RID circle_shape_new(RID p_body, float p_radius, Vector2 p_offset);
     Vector2 circle_shape_get_offset(RID p_shape);
     float circle_shape_get_radius(RID p_shape);

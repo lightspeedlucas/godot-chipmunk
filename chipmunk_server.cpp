@@ -224,6 +224,47 @@ bool ChipmunkServer::space_contains_constraint(RID p_space, RID p_constraint)
 	return cpSpaceContainsConstraint(space, constraint);
 }
 
+Array ChipmunkServer::space_point_query(RID p_space, Vector2 p_point, float p_maxDistance, const Ref<ChipmunkShapeFilter> &p_filter)
+{
+    struct Local
+    {
+        static void query_cb(cpShape *shape, cpVect point, cpFloat distance, cpVect gradient, void *user_data)
+        {
+            auto *data = (GodotDataRef*)cpShapeGetUserData(shape);
+            Dictionary d(true);
+            d["shape"] = data->get().rid;
+            d["point"] = GD(point);
+            d["distance"] = distance;
+            d["gradient"] = GD(gradient);
+            d["metadata"] = data->get().metadata;
+            ((Array*)user_data)->push_back(d);
+        }
+    };
+
+    Array r;
+    auto *space = space_owner.get(p_space);
+    cpSpacePointQuery(space, CP(p_point), p_maxDistance, **p_filter, &Local::query_cb, &r);
+	return r;
+}
+
+Dictionary ChipmunkServer::space_point_query_nearest(RID p_space, Vector2 p_point, float p_maxDistance, const Ref<ChipmunkShapeFilter> &p_filter)
+{
+    cpPointQueryInfo info;
+    auto *space = space_owner.get(p_space);
+    auto *shape = cpSpacePointQueryNearest(space, CP(p_point), p_maxDistance, **p_filter, &info);
+    Dictionary r(true);
+	if (!shape)
+    {
+        auto *data = (GodotDataRef*)cpShapeGetUserData(shape);
+        r["shape"] = data->get().rid;
+        r["point"] = GD(info.point);
+        r["distance"] = info.distance;
+        r["gradient"] = GD(info.gradient);
+        r["metadata"] = data->get().metadata;
+    }
+	return r;
+}
+
 void ChipmunkServer::space_reindex_static(RID p_space)
 {
 	auto *space = space_owner.get(p_space);
@@ -254,24 +295,6 @@ void ChipmunkServer::space_step(RID p_space, float p_dt)
 {
 	auto *space = space_owner.get(p_space);
 	cpSpaceStep(space, p_dt);
-}
-
-Dictionary ChipmunkServer::space_point_query_nearest(RID p_space, Vector2 p_point, float p_maxDistance, const Ref<ChipmunkShapeFilter> &p_filter)
-{
-    cpPointQueryInfo info;
-    auto *space = space_owner.get(p_space);
-    auto *shape = cpSpacePointQueryNearest(space, CP(p_point), p_maxDistance, **p_filter, &info);
-    Dictionary r(true);
-	if (!shape)
-    {
-        auto *data = (GodotDataRef*)cpShapeGetUserData(shape);
-        r["shape"] = data->get().rid;
-        r["point"] = GD(info.point);
-        r["distance"] = info.distance;
-        r["gradient"] = GD(info.gradient);
-        r["metadata"] = data->get().metadata;
-    }
-	return r;
 }
 
 /**********************************************************************/
@@ -703,6 +726,18 @@ void ChipmunkServer::shape_set_collision_type(RID p_shape, int p_collisionType)
 	cpShapeSetCollisionType(shape, p_collisionType);
 }
 
+Ref<ChipmunkShapeFilter> ChipmunkServer::shape_get_filter(RID p_shape)
+{
+    auto *shape = shape_owner.get(p_shape);
+    return memnew(ChipmunkShapeFilter(cpShapeGetFilter(shape)));
+}
+
+void ChipmunkServer::shape_set_filter(RID p_shape, const Ref<ChipmunkShapeFilter> &p_filter)
+{
+    auto *shape = shape_owner.get(p_shape);
+    cpShapeSetFilter(shape, **p_filter);
+}
+
 RID ChipmunkServer::circle_shape_new(RID p_body, float p_radius, Vector2 p_offset)
 {
     auto *body = body_owner.get(p_body);
@@ -1012,13 +1047,13 @@ void ChipmunkServer::_bind_methods()
     ObjectTypeDB::bind_method(_MD("space_contains_shape", "space", "shape"), &ChipmunkServer::space_contains_shape);
     ObjectTypeDB::bind_method(_MD("space_contains_body", "space", "body"), &ChipmunkServer::space_contains_body);
     ObjectTypeDB::bind_method(_MD("space_contains_constraint", "space", "constraint"), &ChipmunkServer::space_contains_constraint);
+    ObjectTypeDB::bind_method(_MD("space_point_query", "space", "point", "maxDistance", "filter"), &ChipmunkServer::space_point_query);
+    ObjectTypeDB::bind_method(_MD("space_point_query_nearest", "space", "point", "maxDistance", "filter"), &ChipmunkServer::space_point_query_nearest);
     ObjectTypeDB::bind_method(_MD("space_reindex_static", "space"), &ChipmunkServer::space_reindex_static);
     ObjectTypeDB::bind_method(_MD("space_reindex_shape", "space", "shape"), &ChipmunkServer::space_reindex_shape);
     ObjectTypeDB::bind_method(_MD("space_reindex_shapes_for_body", "space", "body"), &ChipmunkServer::space_reindex_shapes_for_body);
     ObjectTypeDB::bind_method(_MD("space_use_spatial_hash", "space", "dim", "count"), &ChipmunkServer::space_use_spatial_hash);
     ObjectTypeDB::bind_method(_MD("space_step", "space", "dt"), &ChipmunkServer::space_step);
-
-    ObjectTypeDB::bind_method(_MD("space_point_query_nearest", "space", "point", "maxDistance", "filter"), &ChipmunkServer::space_point_query_nearest);
 
     /** Body */
     ObjectTypeDB::bind_method(_MD("body_new", "mass", "moment"), &ChipmunkServer::body_new);
@@ -1089,6 +1124,8 @@ void ChipmunkServer::_bind_methods()
     ObjectTypeDB::bind_method(_MD("shape_set_surface_velocity", "shape", "surfaceVelocity"), &ChipmunkServer::shape_set_surface_velocity);
     ObjectTypeDB::bind_method(_MD("shape_get_collision_type", "shape"), &ChipmunkServer::shape_get_collision_type);
     ObjectTypeDB::bind_method(_MD("shape_set_collision_type", "shape", "collisionType"), &ChipmunkServer::shape_set_collision_type);
+    ObjectTypeDB::bind_method(_MD("shape_get_filter", "shape"), &ChipmunkServer::shape_get_filter);
+    ObjectTypeDB::bind_method(_MD("shape_set_filter", "shape", "filter"), &ChipmunkServer::shape_set_filter);
     ObjectTypeDB::bind_method(_MD("circle_shape_new", "body", "radius", "offset"), &ChipmunkServer::circle_shape_new);
     ObjectTypeDB::bind_method(_MD("circle_shape_get_offset", "shape"), &ChipmunkServer::circle_shape_get_offset);
     ObjectTypeDB::bind_method(_MD("circle_shape_get_radius", "shape"), &ChipmunkServer::circle_shape_get_radius);

@@ -14,7 +14,6 @@ The following functions are missing bindings on `ChipmunkServer` and therefore c
 - cpSpaceAddCollisionHandler
 - cpSpaceAddWildcardHandler
 - cpSpaceAddPostStepCallback
-- cpSpacePointQuery
 - cpSpaceSegmentQuery
 - cpSpaceSegmentQueryFirst
 - cpSpaceBBQuery
@@ -45,8 +44,6 @@ The following functions are missing bindings on `ChipmunkServer` and therefore c
 - cpShapesCollide
 - cpShapeGetUserData
 - cpShapeSetUserData
-- cpShapeGetFilter
-- cpShapeSetFilter
 - cpCircleShapeAlloc
 - cpCircleShapeInit
 - cpSegmentShapeAlloc
