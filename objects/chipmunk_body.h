@@ -10,10 +10,24 @@ class ChipmunkBody : public Object
 public:
     /** Lifecycle */
     ChipmunkBody();
-    ChipmunkBody(float, float);
     ~ChipmunkBody();
 
     /** Chipmunk methods */
+    void activate();
+    void sleep();
+    bool is_sleeping() const;
+
+    int get_body_type() const;
+    void set_body_type(int);
+    
+    ChipmunkSpace *get_space() const;
+
+    Vector2 get_position() const;
+    void set_position(const Vector2&);
+
+    float get_angle() const;
+    void set_angle(float);
+
     void set_position_update_callback(Object *receiver, const StringName &method);
 
 protected:

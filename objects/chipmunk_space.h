@@ -46,6 +46,9 @@ public:
     void add_body(ChipmunkBody*);
     void remove_body(ChipmunkBody*);
 
+    void add_shape(ChipmunkShape*);
+    void remove_shape(ChipmunkShape*);
+
     void step(float dt);
 
 protected:

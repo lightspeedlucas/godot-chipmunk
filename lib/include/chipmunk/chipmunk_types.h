@@ -193,7 +193,7 @@ typedef uint32_t cpCollisionID;
 	typedef CP_DATA_POINTER_TYPE cpDataPointer;
 #else
 /// Type used for user data pointers.
-	typedef void * cpDataPointer;
+	typedef uint32_t cpDataPointer;
 #endif
 
 #ifdef CP_COLLISION_TYPE_TYPE

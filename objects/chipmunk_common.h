@@ -6,6 +6,7 @@
 
 class ChipmunkSpace;
 class ChipmunkBody;
+class ChipmunkShape;
 
 struct ChipmunkCallbackBinding
 {

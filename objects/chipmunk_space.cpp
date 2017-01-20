@@ -1,11 +1,12 @@
 
 #include "chipmunk_space.h"
 #include "chipmunk_body.h"
+#include "chipmunk_shape.h"
 
 ChipmunkSpace::ChipmunkSpace()
 {
     space = cpSpaceNew();
-    cpSpaceSetUserData(space, reinterpret_cast<void*>(get_instance_ID()));
+    cpSpaceSetUserData(space, get_instance_ID());
 }
 
 ChipmunkSpace::~ChipmunkSpace()
@@ -53,6 +54,16 @@ void ChipmunkSpace::remove_body(ChipmunkBody *body)
     cpSpaceRemoveBody(space, *body);
 }
 
+void ChipmunkSpace::add_shape(ChipmunkShape *shape)
+{
+    cpSpaceAddShape(space, *shape);
+}
+
+void ChipmunkSpace::remove_shape(ChipmunkShape *shape)
+{
+    cpSpaceRemoveShape(space, *shape);
+}
+
 void ChipmunkSpace::step(float dt)
 {
     cpSpaceStep(space, dt);
@@ -75,11 +86,14 @@ void ChipmunkSpace::_bind_methods()
     ObjectTypeDB::bind_method(_MD("add_body", "body:ChipmunkBody"), &ChipmunkSpace::add_body);
     ObjectTypeDB::bind_method(_MD("remove_body", "body:ChipmunkBody"), &ChipmunkSpace::remove_body);
 
+    ObjectTypeDB::bind_method(_MD("add_shape", "shape:ChipmunkShape"), &ChipmunkSpace::add_shape);
+    ObjectTypeDB::bind_method(_MD("remove_shape", "shape:ChipmunkShape"), &ChipmunkSpace::remove_shape);
+
     ObjectTypeDB::bind_method(_MD("step", "dt:real"), &ChipmunkSpace::step);
 }
 
 ChipmunkSpace *ChipmunkSpace::get(cpSpace *space)
 {
-    auto id = reinterpret_cast<ObjectID>(cpSpaceGetUserData(space));
+    auto id = space ? cpSpaceGetUserData(space) : 0;
     return (ChipmunkSpace*)ObjectDB::get_instance(id);
 }
