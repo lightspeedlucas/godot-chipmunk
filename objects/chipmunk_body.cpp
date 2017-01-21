@@ -135,6 +135,16 @@ void ChipmunkBody::set_torque(float value)
     cpBodySetTorque(body, value);
 }
 
+Variant ChipmunkBody::get_metadata() const
+{
+    return metadata;
+}
+
+void ChipmunkBody::set_metadata(const Variant &value)
+{
+    metadata = value;
+}
+
 void ChipmunkBody::set_velocity_update_callback(Object *receiver, const StringName &method)
 {
     memdelete_notnull(velocity_cb);
@@ -245,6 +255,9 @@ void ChipmunkBody::_bind_methods()
     ObjectTypeDB::bind_method(_MD("get_torque"), &ChipmunkBody::get_torque);
     ObjectTypeDB::bind_method(_MD("set_torque", "torque:real"), &ChipmunkBody::set_torque);
     ADD_PROPERTY(PropertyInfo(Variant::REAL, "torque"), _SCS("set_torque"), _SCS("get_torque"));
+
+    ObjectTypeDB::bind_method(_MD("get_metadata"), &ChipmunkBody::get_metadata);
+    ObjectTypeDB::bind_method(_MD("set_metadata", "metadata:Variant"), &ChipmunkBody::set_metadata);
 
     ObjectTypeDB::bind_method(_MD("set_velocity_update_callback", "receiver:Object", "method:StringName"), &ChipmunkBody::set_velocity_update_callback);
     ObjectTypeDB::bind_method(_MD("set_position_update_callback", "receiver:Object", "method:StringName"), &ChipmunkBody::set_position_update_callback);

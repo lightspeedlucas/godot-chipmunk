@@ -36,6 +36,9 @@ public:
     float get_friction() const;
     void set_friction(float);
 
+    Variant get_metadata() const;
+    void set_metadata(const Variant&);
+
     int get_collision_type() const;
     void set_collision_type(int);
 
@@ -43,6 +46,7 @@ protected:
     /** Godot bindings */
 	static void _bind_methods();
     cpShape *shape;
+    Variant metadata;
 
 public:
     /** Chipmunk interoperability */

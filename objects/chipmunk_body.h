@@ -49,6 +49,9 @@ public:
     float get_torque() const;
     void set_torque(float);
 
+    Variant get_metadata() const;
+    void set_metadata(const Variant&);
+
     void set_velocity_update_callback(Object *receiver, const StringName &method);
     void set_position_update_callback(Object *receiver, const StringName &method);
     
@@ -67,6 +70,7 @@ protected:
     /** Godot bindings */
 	static void _bind_methods();
     cpBody *body;
+    Variant metadata;
 
 private:
     /** Callbacks */

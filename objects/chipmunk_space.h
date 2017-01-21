@@ -36,6 +36,9 @@ public:
 
     int get_collision_persistence() const;
     void set_collision_persistence(int);
+
+    Variant get_metadata() const;
+    void set_metadata(const Variant&);
     
     float get_current_timestep() const;
     bool is_locked() const;
@@ -57,6 +60,7 @@ protected:
     /** Godot bindings */
 	static void _bind_methods();
     cpSpace *space;
+    Variant metadata;
 
 public:
     /** Chipmunk interoperability */

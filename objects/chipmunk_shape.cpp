@@ -74,6 +74,16 @@ void ChipmunkShape::set_friction(float value)
     cpShapeSetFriction(shape, value);
 }
 
+Variant ChipmunkShape::get_metadata() const
+{
+    return metadata;
+}
+
+void ChipmunkShape::set_metadata(const Variant &value)
+{
+    metadata = value;
+}
+
 int ChipmunkShape::get_collision_type() const
 {
     return cpShapeGetCollisionType(shape);
@@ -109,6 +119,9 @@ void ChipmunkShape::_bind_methods()
     ObjectTypeDB::bind_method(_MD("set_friction", "friction:real"), &ChipmunkShape::set_friction);
     ADD_PROPERTY(PropertyInfo(Variant::REAL, "friction"), _SCS("set_friction"), _SCS("get_friction"));
 
+    ObjectTypeDB::bind_method(_MD("get_metadata"), &ChipmunkShape::get_metadata);
+    ObjectTypeDB::bind_method(_MD("set_metadata", "metadata:Variant"), &ChipmunkShape::set_metadata);
+    
     ObjectTypeDB::bind_method(_MD("get_collision_type"), &ChipmunkShape::get_collision_type);
     ObjectTypeDB::bind_method(_MD("set_collision_type", "collision_type:int"), &ChipmunkShape::set_collision_type);
     ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_type"), _SCS("set_collision_type"), _SCS("get_collision_type"));
