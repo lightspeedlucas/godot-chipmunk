@@ -1,9 +1,7 @@
 #ifndef GODOT_CHIPMUNK_SHAPE_H
 #define GODOT_CHIPMUNK_SHAPE_H
 
-#include "object.h"
-#include "reference.h"
-#include "chipmunk_common.h"
+#include <godot_chipmunk.h>
 
 class ChipmunkShape : public Object
 {

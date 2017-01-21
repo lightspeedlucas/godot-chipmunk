@@ -1,6 +1,5 @@
 
 #include "chipmunk_body.h"
-#include "chipmunk_space.h"
 
 ChipmunkBody::ChipmunkBody()
     : position_cb(0)

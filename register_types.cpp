@@ -5,12 +5,7 @@
 #include "globals.h"
 #include "print_string.h"
 
-#include "chipmunk/chipmunk.h"
-
-#include "objects/chipmunk_space.h"
-#include "objects/chipmunk_body.h"
-#include "objects/chipmunk_shape.h"
-#include "chipmunk_structs.h"
+#include "godot_chipmunk.h"
 
 void register_chipmunk_types()
 {

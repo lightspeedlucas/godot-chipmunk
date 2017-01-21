@@ -1,8 +1,7 @@
 #ifndef GODOT_CHIPMUNK_SPACE_H
 #define GODOT_CHIPMUNK_SPACE_H
 
-#include "object.h"
-#include "chipmunk_common.h"
+#include <godot_chipmunk.h>
 
 class ChipmunkSpace : public Object
 {

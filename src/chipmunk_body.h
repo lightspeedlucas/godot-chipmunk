@@ -1,8 +1,7 @@
 #ifndef GODOT_CHIPMUNK_BODY_H
 #define GODOT_CHIPMUNK_BODY_H
 
-#include "object.h"
-#include "chipmunk_common.h"
+#include <godot_chipmunk.h>
 
 class ChipmunkBody : public Object
 {

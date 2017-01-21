@@ -1,7 +1,5 @@
 
 #include "chipmunk_space.h"
-#include "chipmunk_body.h"
-#include "chipmunk_shape.h"
 
 ChipmunkSpace::ChipmunkSpace()
 {

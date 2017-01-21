@@ -7,7 +7,7 @@ env_chipmunk = env_modules.Clone()
 
 # Integration source files
 sources = Glob("*.cpp")
-sources += Glob("objects/*.cpp")
+sources += Glob("src/*.cpp")
 
 # Chipmunk source files
 sources += [
@@ -43,7 +43,7 @@ sources += [
 ]
 
 # Chipmunk include path
-env_chipmunk.Append(CPPPATH=["lib/include"])
+env_chipmunk.Append(CPPPATH=[".", "lib/include"])
 
 # Compilation flags
 env_chipmunk.Append(CPPFLAGS=["-DCP_USE_DOUBLES=0", "-DCP_SPACE_DISABLE_DEBUG_API"])

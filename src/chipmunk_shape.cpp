@@ -1,7 +1,5 @@
 
 #include "chipmunk_shape.h"
-#include "chipmunk_body.h"
-#include "chipmunk_space.h"
 
 ChipmunkShape::ChipmunkShape(cpShape *shape)
     : shape(shape)
