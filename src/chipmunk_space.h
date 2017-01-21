@@ -1,6 +1,7 @@
 #ifndef GODOT_CHIPMUNK_SPACE_H
 #define GODOT_CHIPMUNK_SPACE_H
 
+#include <hash_map.h>
 #include <godot_chipmunk.h>
 
 class ChipmunkSpace : public Object
@@ -42,6 +43,10 @@ public:
     float get_current_timestep() const;
     bool is_locked() const;
 
+    ChipmunkCollisionHandler *add_default_collision_handler();
+    ChipmunkCollisionHandler *add_collision_handler(int type_a, int type_b);
+    ChipmunkCollisionHandler *add_wildcard_handler(int type);
+
     void add_body(ChipmunkBody*);
     void remove_body(ChipmunkBody*);
     bool contains_body(ChipmunkBody*) const;
@@ -60,6 +65,11 @@ protected:
 	static void _bind_methods();
     cpSpace *space;
     Variant metadata;
+
+    /** Active collision handlers */
+    friend class ChipmunkCollisionHandler;
+    HashMap<uint32_t, ChipmunkCollisionHandler*> collision_handlers;
+    uint32_t last_collision_handler_id;
 
 public:
     /** Chipmunk interoperability */

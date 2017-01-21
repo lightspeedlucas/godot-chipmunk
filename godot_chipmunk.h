@@ -98,9 +98,11 @@ public:
 class ChipmunkSpace;
 class ChipmunkBody;
 class ChipmunkShape;
+class ChipmunkCollisionHandler;
 
 #include "src/chipmunk_space.h"
 #include "src/chipmunk_body.h"
 #include "src/chipmunk_shape.h"
+#include "src/chipmunk_collision_handler.h"
 
 #endif

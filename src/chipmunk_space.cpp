@@ -2,6 +2,7 @@
 #include "chipmunk_space.h"
 
 ChipmunkSpace::ChipmunkSpace()
+    : last_collision_handler_id(0)
 {
     space = cpSpaceNew();
     cpSpaceSetUserData(space, get_instance_ID());
@@ -112,6 +113,24 @@ bool ChipmunkSpace::is_locked() const
     return cpSpaceIsLocked(space);
 }
 
+ChipmunkCollisionHandler *ChipmunkSpace::add_default_collision_handler()
+{
+    auto *handler = cpSpaceAddDefaultCollisionHandler(space);
+    return ChipmunkCollisionHandler::get_or_create(this, handler);
+}
+
+ChipmunkCollisionHandler *ChipmunkSpace::add_collision_handler(int type_a, int type_b)
+{
+    auto *handler = cpSpaceAddCollisionHandler(space, type_a, type_b);
+    return ChipmunkCollisionHandler::get_or_create(this, handler);
+}
+
+ChipmunkCollisionHandler *ChipmunkSpace::add_wildcard_handler(int type)
+{
+    auto *handler = cpSpaceAddWildcardHandler(space, type);
+    return ChipmunkCollisionHandler::get_or_create(this, handler);
+}
+
 void ChipmunkSpace::add_body(ChipmunkBody *body)
 {
     cpSpaceAddBody(space, *body);
@@ -218,8 +237,12 @@ void ChipmunkSpace::_bind_methods()
     ObjectTypeDB::bind_method(_MD("get_metadata"), &ChipmunkBody::get_metadata);
     ObjectTypeDB::bind_method(_MD("set_metadata", "metadata:Variant"), &ChipmunkBody::set_metadata);
 
-    ObjectTypeDB::bind_method(_MD("get_current_timestep"), &ChipmunkSpace::get_current_timestep);    
-    ObjectTypeDB::bind_method(_MD("is_locked"), &ChipmunkSpace::is_locked);    
+    ObjectTypeDB::bind_method(_MD("get_current_timestep"), &ChipmunkSpace::get_current_timestep);
+    ObjectTypeDB::bind_method(_MD("is_locked"), &ChipmunkSpace::is_locked);
+
+    ObjectTypeDB::bind_method(_MD("add_default_collision_handler:ChipmunkCollisionHandler"), &ChipmunkSpace::add_default_collision_handler);
+    ObjectTypeDB::bind_method(_MD("add_collision_handler:ChipmunkCollisionHandler", "type_a:int", "type_b:int"), &ChipmunkSpace::add_collision_handler);
+    ObjectTypeDB::bind_method(_MD("add_wildcard_handler:ChipmunkCollisionHandler", "type:int"), &ChipmunkSpace::add_wildcard_handler);
 
     ObjectTypeDB::bind_method(_MD("add_body", "body:ChipmunkBody"), &ChipmunkSpace::add_body);
     ObjectTypeDB::bind_method(_MD("remove_body", "body:ChipmunkBody"), &ChipmunkSpace::remove_body);
