@@ -1,4 +1,5 @@
 
+#include <godot_chipmunk.h>
 #include "chipmunk_space.h"
 
 ChipmunkSpace::ChipmunkSpace()
@@ -161,6 +162,21 @@ bool ChipmunkSpace::contains_shape(ChipmunkShape *shape) const
     return cpSpaceContainsShape(space, *shape);
 }
 
+void ChipmunkSpace::add_constraint(ChipmunkConstraint *constraint)
+{
+    cpSpaceAddConstraint(space, *constraint);
+}
+
+void ChipmunkSpace::remove_constraint(ChipmunkConstraint *constraint)
+{
+    cpSpaceRemoveConstraint(space, *constraint);
+}
+
+bool ChipmunkSpace::contains_constraint(ChipmunkConstraint *constraint) const
+{
+    return cpSpaceContainsConstraint(space, *constraint);
+}
+
 Array ChipmunkSpace::point_query(const Vector2 &point, float maxDistance, const Ref<ChipmunkShapeFilter> &filter) const
 {
     struct Local
@@ -251,6 +267,10 @@ void ChipmunkSpace::_bind_methods()
     ObjectTypeDB::bind_method(_MD("add_shape", "shape:ChipmunkShape"), &ChipmunkSpace::add_shape);
     ObjectTypeDB::bind_method(_MD("remove_shape", "shape:ChipmunkShape"), &ChipmunkSpace::remove_shape);
     ObjectTypeDB::bind_method(_MD("contains_shape", "shape:ChipmunkShape"), &ChipmunkSpace::contains_shape);
+
+    ObjectTypeDB::bind_method(_MD("add_constraint", "constraint:ChipmunkConstraint"), &ChipmunkSpace::add_constraint);
+    ObjectTypeDB::bind_method(_MD("remove_constraint", "constraint:ChipmunkConstraint"), &ChipmunkSpace::remove_constraint);
+    ObjectTypeDB::bind_method(_MD("contains_constraint", "constraint:ChipmunkConstraint"), &ChipmunkSpace::contains_constraint);
 
     ObjectTypeDB::bind_method(_MD("point_query", "point:Vector2", "maxDistance:real", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::point_query);
     ObjectTypeDB::bind_method(_MD("point_query_nearest", "point:Vector2", "maxDistance:real", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::point_query_nearest);

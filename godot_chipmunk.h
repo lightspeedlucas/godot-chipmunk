@@ -13,7 +13,7 @@ struct ChipmunkCallbackBinding
 {
     ObjectID id;
     StringName method;
-    
+
     void call();
     void call(const Variant &arg0);
 };
@@ -98,11 +98,16 @@ public:
 class ChipmunkSpace;
 class ChipmunkBody;
 class ChipmunkShape;
+class ChipmunkConstraint;
 class ChipmunkCollisionHandler;
 
 #include "src/chipmunk_space.h"
 #include "src/chipmunk_body.h"
 #include "src/chipmunk_shape.h"
+#include "src/chipmunk_constraint.h"
+
 #include "src/chipmunk_collision_handler.h"
+
+#include "src/chipmunk_pin_joint.h"
 
 #endif

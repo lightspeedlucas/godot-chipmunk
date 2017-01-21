@@ -2,7 +2,7 @@
 #define GODOT_CHIPMUNK_SPACE_H
 
 #include <hash_map.h>
-#include <godot_chipmunk.h>
+#include <object.h>
 
 class ChipmunkSpace : public Object
 {
@@ -39,7 +39,7 @@ public:
 
     Variant get_metadata() const;
     void set_metadata(const Variant&);
-    
+
     float get_current_timestep() const;
     bool is_locked() const;
 
@@ -54,6 +54,10 @@ public:
     void add_shape(ChipmunkShape*);
     void remove_shape(ChipmunkShape*);
     bool contains_shape(ChipmunkShape*) const;
+
+    void add_constraint(ChipmunkConstraint*);
+    void remove_constraint(ChipmunkConstraint*);
+    bool contains_constraint(ChipmunkConstraint*) const;
 
     Array point_query(const Vector2 &point, float maxDistance, const Ref<ChipmunkShapeFilter> &filter) const;
     Dictionary point_query_nearest(const Vector2 &point, float maxDistance, const Ref<ChipmunkShapeFilter> &filter) const;

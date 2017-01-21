@@ -1,7 +1,7 @@
 #ifndef GODOT_CHIPMUNK_BODY_H
 #define GODOT_CHIPMUNK_BODY_H
 
-#include <godot_chipmunk.h>
+#include <object.h>
 
 class ChipmunkBody : public Object
 {
@@ -18,7 +18,7 @@ public:
 
     int get_body_type() const;
     void set_body_type(int);
-    
+
     ChipmunkSpace *get_space() const;
 
     float get_mass() const;
@@ -53,7 +53,7 @@ public:
 
     void set_velocity_update_callback(Object *receiver, const StringName &method);
     void set_position_update_callback(Object *receiver, const StringName &method);
-    
+
     void apply_force_at_world_point(const Vector2 &force, const Vector2 &point);
     void apply_force_at_local_point(const Vector2 &force, const Vector2 &point);
 

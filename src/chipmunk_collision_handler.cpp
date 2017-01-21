@@ -1,4 +1,5 @@
 
+#include <godot_chipmunk.h>
 #include "chipmunk_collision_handler.h"
 
 ChipmunkCollisionHandler::ChipmunkCollisionHandler(ChipmunkSpace *space, cpCollisionHandler *handler)

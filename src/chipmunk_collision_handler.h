@@ -1,7 +1,7 @@
 #ifndef GODOT_CHIPMUNK_COLLISION_HANDLER_H
 #define GODOT_CHIPMUNK_COLLISION_HANDLER_H
 
-#include <godot_chipmunk.h>
+#include <object.h>
 
 class ChipmunkCollisionHandler : public Object
 {

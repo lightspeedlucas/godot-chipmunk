@@ -1,4 +1,5 @@
 
+#include <godot_chipmunk.h>
 #include "chipmunk_body.h"
 
 ChipmunkBody::ChipmunkBody()
@@ -231,7 +232,7 @@ void ChipmunkBody::_bind_methods()
     ObjectTypeDB::bind_method(_MD("get_position"), &ChipmunkBody::get_position);
     ObjectTypeDB::bind_method(_MD("set_position", "position:Vector2"), &ChipmunkBody::set_position);
     ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position"), _SCS("set_position"), _SCS("get_position"));
-    
+
     ObjectTypeDB::bind_method(_MD("get_center_of_gravity"), &ChipmunkBody::get_center_of_gravity);
     ObjectTypeDB::bind_method(_MD("set_center_of_gravity", "center_of_gravity:Vector2"), &ChipmunkBody::set_center_of_gravity);
     ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "center_of_gravity"), _SCS("set_center_of_gravity"), _SCS("get_center_of_gravity"));
@@ -262,16 +263,16 @@ void ChipmunkBody::_bind_methods()
     ObjectTypeDB::bind_method(_MD("set_velocity_update_callback", "receiver:Object", "method:StringName"), &ChipmunkBody::set_velocity_update_callback);
     ObjectTypeDB::bind_method(_MD("set_position_update_callback", "receiver:Object", "method:StringName"), &ChipmunkBody::set_position_update_callback);
 
-    ObjectTypeDB::bind_method(_MD("apply_force_at_world_point", "force:Vector2", "point:Vector2"), &ChipmunkBody::apply_force_at_world_point);    
-    ObjectTypeDB::bind_method(_MD("apply_force_at_local_point", "force:Vector2", "point:Vector2"), &ChipmunkBody::apply_force_at_local_point);    
+    ObjectTypeDB::bind_method(_MD("apply_force_at_world_point", "force:Vector2", "point:Vector2"), &ChipmunkBody::apply_force_at_world_point);
+    ObjectTypeDB::bind_method(_MD("apply_force_at_local_point", "force:Vector2", "point:Vector2"), &ChipmunkBody::apply_force_at_local_point);
 
-    ObjectTypeDB::bind_method(_MD("apply_impulse_at_world_point", "impulse:Vector2", "point:Vector2"), &ChipmunkBody::apply_impulse_at_world_point);    
-    ObjectTypeDB::bind_method(_MD("apply_impulse_at_local_point", "impulse:Vector2", "point:Vector2"), &ChipmunkBody::apply_impulse_at_local_point);   
+    ObjectTypeDB::bind_method(_MD("apply_impulse_at_world_point", "impulse:Vector2", "point:Vector2"), &ChipmunkBody::apply_impulse_at_world_point);
+    ObjectTypeDB::bind_method(_MD("apply_impulse_at_local_point", "impulse:Vector2", "point:Vector2"), &ChipmunkBody::apply_impulse_at_local_point);
 
-    ObjectTypeDB::bind_method(_MD("get_velocity_at_world_point", "point:Vector2"), &ChipmunkBody::get_velocity_at_world_point);    
-    ObjectTypeDB::bind_method(_MD("get_velocity_at_local_point", "point:Vector2"), &ChipmunkBody::get_velocity_at_local_point);    
+    ObjectTypeDB::bind_method(_MD("get_velocity_at_world_point", "point:Vector2"), &ChipmunkBody::get_velocity_at_world_point);
+    ObjectTypeDB::bind_method(_MD("get_velocity_at_local_point", "point:Vector2"), &ChipmunkBody::get_velocity_at_local_point);
 
-    ObjectTypeDB::bind_method(_MD("get_kinetic_energy"), &ChipmunkBody::get_kinetic_energy);    
+    ObjectTypeDB::bind_method(_MD("get_kinetic_energy"), &ChipmunkBody::get_kinetic_energy);
 
     BIND_CONSTANT(CP_BODY_TYPE_DYNAMIC);
     BIND_CONSTANT(CP_BODY_TYPE_KINEMATIC);
