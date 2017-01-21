@@ -114,7 +114,7 @@ void ChipmunkShape::_bind_methods()
     ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_type"), _SCS("set_collision_type"), _SCS("get_collision_type"));
 }
 
-ChipmunkShape *ChipmunkShape::get(cpShape *shape)
+ChipmunkShape *ChipmunkShape::get(const cpShape *shape)
 {
     auto id = shape ? cpShapeGetUserData(shape) : 0;
     return (ChipmunkShape*)ObjectDB::get_instance(id);

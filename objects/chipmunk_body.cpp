@@ -281,7 +281,7 @@ void ChipmunkBody::PositionUpdateFunc(cpBody *body, cpFloat dt)
         obj->position_cb->call(body);
 }
 
-ChipmunkBody *ChipmunkBody::get(cpBody *body)
+ChipmunkBody *ChipmunkBody::get(const cpBody *body)
 {
     auto id = body ? cpBodyGetUserData(body) : 0;
     return (ChipmunkBody*)ObjectDB::get_instance(id);

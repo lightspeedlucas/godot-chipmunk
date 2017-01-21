@@ -4,6 +4,8 @@
 #include "object.h"
 #include "chipmunk/chipmunk.h"
 
+#include "../chipmunk_structs.h"
+
 class ChipmunkSpace;
 class ChipmunkBody;
 class ChipmunkShape;

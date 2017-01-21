@@ -9,15 +9,18 @@
 class ChipmunkShapeFilter : public Reference
 {
     OBJ_TYPE(ChipmunkShapeFilter, Reference);
-protected:
-	static void _bind_methods();
+public:
+    /** Lifecycle */
+    ChipmunkShapeFilter();
 
 public:
+    /** Chipmunk properties */
     int group;
     int categories;
     int mask;
 
 public:
+    /** Properties setters/getters */
     void set_group(int p_group);
     int get_group() const;
 
@@ -27,10 +30,14 @@ public:
     void set_mask(int p_mask);
     int get_mask() const;
 
-    ChipmunkShapeFilter();
-    ChipmunkShapeFilter(const cpShapeFilter&);
+protected:
+    /** Godot bindings */
+	static void _bind_methods();
 
+public:
+    /** Chipmunk interoperability */
     operator cpShapeFilter() const;
+    ChipmunkShapeFilter(const cpShapeFilter&);
 };
 
 #endif

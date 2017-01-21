@@ -79,7 +79,7 @@ private:
 public:
     /** Chipmunk interoperability */
     operator cpBody*() const { return body; }
-    static ChipmunkBody *get(cpBody*);
+    static ChipmunkBody *get(const cpBody*);
 };
 
 #endif

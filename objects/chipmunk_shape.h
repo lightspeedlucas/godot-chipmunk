@@ -47,7 +47,7 @@ protected:
 public:
     /** Chipmunk interoperability */
     operator cpShape*() const { return shape; }
-    static ChipmunkShape *get(cpShape*);
+    static ChipmunkShape *get(const cpShape*);
 };
 
 class ChipmunkShapeFactory : public Reference
