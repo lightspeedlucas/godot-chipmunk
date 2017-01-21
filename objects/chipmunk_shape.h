@@ -18,10 +18,26 @@ public:
     ~ChipmunkShape();
 
     /** Chipmunk methods */
+    ChipmunkSpace *get_space() const;
+    ChipmunkBody *get_body() const;
+
+    float get_mass() const;
+    void set_mass(float);
+
     float get_density() const;
     void set_density(float);
-    
-    ChipmunkSpace *get_space() const;
+
+    bool get_sensor() const;
+    void set_sensor(bool);
+
+    float get_elasticity() const;
+    void set_elasticity(float);
+
+    float get_friction() const;
+    void set_friction(float);
+
+    int get_collision_type() const;
+    void set_collision_type(int);
 
 protected:
     /** Godot bindings */
