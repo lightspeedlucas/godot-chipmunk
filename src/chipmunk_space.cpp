@@ -250,8 +250,8 @@ void ChipmunkSpace::_bind_methods()
     ObjectTypeDB::bind_method(_MD("set_collision_persistence", "collision_persistence:real"), &ChipmunkSpace::set_collision_persistence);
     ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_persistence"), _SCS("set_collision_persistence"), _SCS("get_collision_persistence"));
 
-    ObjectTypeDB::bind_method(_MD("get_metadata"), &ChipmunkBody::get_metadata);
-    ObjectTypeDB::bind_method(_MD("set_metadata", "metadata:Variant"), &ChipmunkBody::set_metadata);
+    ObjectTypeDB::bind_method(_MD("get_metadata"), &ChipmunkSpace::get_metadata);
+    ObjectTypeDB::bind_method(_MD("set_metadata", "metadata:Variant"), &ChipmunkSpace::set_metadata);
 
     ObjectTypeDB::bind_method(_MD("get_current_timestep"), &ChipmunkSpace::get_current_timestep);
     ObjectTypeDB::bind_method(_MD("is_locked"), &ChipmunkSpace::is_locked);
