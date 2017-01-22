@@ -1,10 +1,11 @@
 /* register_types.cpp */
 
-#include "register_types.h"
-#include "object_type_db.h"
-#include "globals.h"
-#include "print_string.h"
+#include <object_type_db.h>
+#include <globals.h>
+#include <print_string.h>
+#include <scene/2d/canvas_item.h>
 
+#include "register_types.h"
 #include "godot_chipmunk.h"
 
 void register_chipmunk_types()
@@ -27,6 +28,9 @@ void register_chipmunk_types()
 
     ObjectTypeDB::register_virtual_type<ChipmunkCollisionHandler>();
     ObjectTypeDB::register_type<ChipmunkShapeFilter>();
+
+    // Little hack
+    ObjectTypeDB::bind_method(_MD("set_block_transform_notify", "enable:bool"), &CanvasItem::set_block_transform_notify);
 
     // register server
     //Globals::get_singleton()->add_singleton(Globals::Singleton("ChipmunkServer", ChipmunkServer::get_singleton()));
