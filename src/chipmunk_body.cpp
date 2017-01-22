@@ -216,7 +216,7 @@ void ChipmunkBody::_bind_methods()
     ObjectTypeDB::bind_method(_MD("is_sleeping"), &ChipmunkBody::is_sleeping);
 
     ObjectTypeDB::bind_method(_MD("get_body_type"), &ChipmunkBody::get_body_type);
-    ObjectTypeDB::bind_method(_MD("set_body_type", "type:CP_BODY_TYPE_*"), &ChipmunkBody::set_body_type);
+    ObjectTypeDB::bind_method(_MD("set_body_type", "type:int"), &ChipmunkBody::set_body_type);
     ADD_PROPERTY(PropertyInfo(Variant::INT, "body_type"), _SCS("set_body_type"), _SCS("get_body_type"));
 
     ObjectTypeDB::bind_method(_MD("get_space"), &ChipmunkBody::get_space);
@@ -274,6 +274,10 @@ void ChipmunkBody::_bind_methods()
 
     ObjectTypeDB::bind_method(_MD("get_kinetic_energy"), &ChipmunkBody::get_kinetic_energy);
 
+    ObjectTypeDB::bind_integer_constant(get_type_static(), "DYNAMIC", CP_BODY_TYPE_DYNAMIC);
+    ObjectTypeDB::bind_integer_constant(get_type_static(), "KINEMATIC", CP_BODY_TYPE_KINEMATIC);
+    ObjectTypeDB::bind_integer_constant(get_type_static(), "STATIC", CP_BODY_TYPE_STATIC);
+
     BIND_CONSTANT(CP_BODY_TYPE_DYNAMIC);
     BIND_CONSTANT(CP_BODY_TYPE_KINEMATIC);
     BIND_CONSTANT(CP_BODY_TYPE_STATIC);
@@ -284,7 +288,7 @@ void ChipmunkBody::VelocityUpdateFunc(cpBody *body, cpVect gravity, cpFloat damp
     cpBodyUpdateVelocity(body, gravity, damping, dt);
     auto *obj = ChipmunkBody::get(body);
     if (obj->velocity_cb)
-        obj->velocity_cb->call(body);
+        obj->velocity_cb->call(obj);
 }
 
 void ChipmunkBody::PositionUpdateFunc(cpBody *body, cpFloat dt)
@@ -292,7 +296,7 @@ void ChipmunkBody::PositionUpdateFunc(cpBody *body, cpFloat dt)
     cpBodyUpdatePosition(body, dt);
     auto *obj = ChipmunkBody::get(body);
     if (obj->position_cb)
-        obj->position_cb->call(body);
+        obj->position_cb->call(obj);
 }
 
 ChipmunkBody *ChipmunkBody::get(const cpBody *body)

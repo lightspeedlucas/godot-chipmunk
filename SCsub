@@ -47,6 +47,7 @@ env_chipmunk.Append(CPPPATH=[".", "lib/include"])
 
 # Compilation flags
 env_chipmunk.Append(CPPFLAGS=["-DCP_USE_DOUBLES=0", "-DCP_SPACE_DISABLE_DEBUG_API"])
+env_chipmunk.Append(CXXFLAGS=['-std=c++11'])
 
 # Compile as a static library
 lib = env_chipmunk.Library("chipmunk", sources)

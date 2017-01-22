@@ -55,6 +55,7 @@ void ChipmunkPinJoint::_bind_methods()
 
 ChipmunkPinJoint *ChipmunkConstraintFactory::pin_joint(ChipmunkBody *body_a, ChipmunkBody *body_b, const Vector2 &anchor_a, const Vector2 &anchor_b)
 {
+    ERR_FAIL_NULL_V(body_a, NULL);
     auto *constraint = cpPinJointNew(*body_a, body_b ? (cpBody*)*body_b : 0, CP(anchor_a), CP(anchor_b));
     return memnew(ChipmunkPinJoint(constraint));
 }

@@ -11,6 +11,12 @@ ChipmunkSpace::ChipmunkSpace()
 
 ChipmunkSpace::~ChipmunkSpace()
 {
+    List<uint32_t> keys;
+	collision_handlers.get_key_list(&keys);
+
+    for (auto *e = keys.front(); e; e = e->next())
+        memdelete(collision_handlers[e->get()]);
+
     cpSpaceFree(space);
 }
 
@@ -134,46 +140,55 @@ ChipmunkCollisionHandler *ChipmunkSpace::add_wildcard_handler(int type)
 
 void ChipmunkSpace::add_body(ChipmunkBody *body)
 {
+    ERR_FAIL_NULL(body);
     cpSpaceAddBody(space, *body);
 }
 
 void ChipmunkSpace::remove_body(ChipmunkBody *body)
 {
+    ERR_FAIL_NULL(body);
     cpSpaceRemoveBody(space, *body);
 }
 
 bool ChipmunkSpace::contains_body(ChipmunkBody *body) const
 {
+    ERR_FAIL_NULL_V(body, false);
     return cpSpaceContainsBody(space, *body);
 }
 
 void ChipmunkSpace::add_shape(ChipmunkShape *shape)
 {
+    ERR_FAIL_NULL(shape);
     cpSpaceAddShape(space, *shape);
 }
 
 void ChipmunkSpace::remove_shape(ChipmunkShape *shape)
 {
+    ERR_FAIL_NULL(shape);
     cpSpaceRemoveShape(space, *shape);
 }
 
 bool ChipmunkSpace::contains_shape(ChipmunkShape *shape) const
 {
+    ERR_FAIL_NULL_V(shape, false);
     return cpSpaceContainsShape(space, *shape);
 }
 
 void ChipmunkSpace::add_constraint(ChipmunkConstraint *constraint)
 {
+    ERR_FAIL_NULL(constraint);
     cpSpaceAddConstraint(space, *constraint);
 }
 
 void ChipmunkSpace::remove_constraint(ChipmunkConstraint *constraint)
 {
+    ERR_FAIL_NULL(constraint);
     cpSpaceRemoveConstraint(space, *constraint);
 }
 
 bool ChipmunkSpace::contains_constraint(ChipmunkConstraint *constraint) const
 {
+    ERR_FAIL_NULL_V(constraint, false);
     return cpSpaceContainsConstraint(space, *constraint);
 }
 

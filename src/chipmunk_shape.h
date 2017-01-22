@@ -40,6 +40,9 @@ public:
     int get_collision_type() const;
     void set_collision_type(int);
 
+    Ref<ChipmunkShapeFilter> get_filter() const;
+    void set_filter(const Ref<ChipmunkShapeFilter> &filter);
+
 protected:
     /** Godot bindings */
 	static void _bind_methods();

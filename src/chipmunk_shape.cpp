@@ -93,6 +93,16 @@ void ChipmunkShape::set_collision_type(int value)
     cpShapeSetCollisionType(shape, value);
 }
 
+Ref<ChipmunkShapeFilter> ChipmunkShape::get_filter() const
+{
+    return memnew(ChipmunkShapeFilter(cpShapeGetFilter(shape)));
+}
+
+void ChipmunkShape::set_filter(const Ref<ChipmunkShapeFilter> &filter)
+{
+    cpShapeSetFilter(shape, **filter);
+}
+
 void ChipmunkShape::_bind_methods()
 {
     ObjectTypeDB::bind_method(_MD("get_space"), &ChipmunkShape::get_space);
@@ -124,6 +134,9 @@ void ChipmunkShape::_bind_methods()
     ObjectTypeDB::bind_method(_MD("get_collision_type"), &ChipmunkShape::get_collision_type);
     ObjectTypeDB::bind_method(_MD("set_collision_type", "collision_type:int"), &ChipmunkShape::set_collision_type);
     ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_type"), _SCS("set_collision_type"), _SCS("get_collision_type"));
+
+    ObjectTypeDB::bind_method(_MD("get_filter:ChipmunkShapeFilter"), &ChipmunkShape::get_filter);
+    ObjectTypeDB::bind_method(_MD("set_filter", "filter:ChipmunkShapeFilter"), &ChipmunkShape::set_filter);
 }
 
 ChipmunkShape *ChipmunkShape::get(const cpShape *shape)
@@ -136,21 +149,25 @@ ChipmunkShape *ChipmunkShape::get(const cpShape *shape)
 
 ChipmunkShape *ChipmunkShapeFactory::circle(ChipmunkBody *body, float radius, const Vector2 &offset)
 {
+    ERR_FAIL_NULL_V(body, NULL);
     return wrap(cpCircleShapeNew(*body, radius, CP(offset)));
 }
 
 ChipmunkShape *ChipmunkShapeFactory::segment(ChipmunkBody *body, const Vector2 &a, const Vector2 &b, float radius)
 {
+    ERR_FAIL_NULL_V(body, NULL);
     return wrap(cpSegmentShapeNew(*body, CP(a), CP(b), radius));
 }
 
 ChipmunkShape *ChipmunkShapeFactory::box(ChipmunkBody *body, const Rect2 &box, float radius)
 {
+    ERR_FAIL_NULL_V(body, NULL);
     return wrap(cpBoxShapeNew2(*body, CP(box), radius));
 }
 
 ChipmunkShape *ChipmunkShapeFactory::poly(ChipmunkBody *body, const Vector2Array &verts, float radius)
 {
+    ERR_FAIL_NULL_V(body, NULL);
     Vector2Array::Read r = verts.read();
     auto *cp_verts = reinterpret_cast<const cpVect*>(r.ptr());
     return wrap(cpPolyShapeNewRaw(*body, verts.size(), cp_verts, radius));
