@@ -208,8 +208,7 @@ Array ChipmunkSpace::point_query(const Vector2 &point, float maxDistance, const 
     };
 
     Array r;
-    ERR_FAIL_COND_V(filter.is_null(), r);
-    cpSpacePointQuery(space, CP(point), maxDistance, **filter, &Local::cb, &r);
+    cpSpacePointQuery(space, CP(point), maxDistance, CP(filter), &Local::cb, &r);
     return r;
 }
 
@@ -217,14 +216,81 @@ Dictionary ChipmunkSpace::point_query_nearest(const Vector2 &point, float maxDis
 {
     cpPointQueryInfo info;
     Dictionary r(true);
-    ERR_FAIL_COND_V(filter.is_null(), r);
-    if (cpSpacePointQueryNearest(space, CP(point), maxDistance, **filter, &info))
+    if (cpSpacePointQueryNearest(space, CP(point), maxDistance, CP(filter), &info))
     {
         r["shape"] = ChipmunkShape::get(info.shape);
         r["point"] = GD(info.point);
         r["distance"] = info.distance;
         r["gradient"] = GD(info.gradient);
     }
+    return r;
+}
+
+Array ChipmunkSpace::segment_query(const Vector2 &start, const Vector2 &end, float radius, const Ref<ChipmunkShapeFilter> &filter) const
+{
+    struct Local
+    {
+        static void cb(cpShape *shape, cpVect point, cpVect normal, cpFloat alpha, void *user_data)
+        {
+            Dictionary r(true);
+            r["shape"] = ChipmunkShape::get(shape);
+            r["point"] = GD(point);
+            r["normal"] = GD(normal);
+            r["alpha"] = alpha;
+            ((Array*)user_data)->push_back(r);
+        }
+    };
+
+    Array r;
+    cpSpaceSegmentQuery(space, CP(start), CP(end), radius, CP(filter), &Local::cb, &r);
+    return r;
+}
+
+Dictionary ChipmunkSpace::segment_query_first(const Vector2 &start, const Vector2 &end, float radius, const Ref<ChipmunkShapeFilter> &filter) const
+{
+    cpSegmentQueryInfo info;
+    Dictionary r(true);
+    if (cpSpaceSegmentQueryFirst(space, CP(start), CP(end), radius, CP(filter), &info))
+    {
+        r["shape"] = ChipmunkShape::get(info.shape);
+        r["point"] = GD(info.point);
+        r["normal"] = GD(info.normal);
+        r["alpha"] = info.alpha;
+    }
+    return r;
+}
+
+Array ChipmunkSpace::bb_query(const Rect2 &bb, const Ref<ChipmunkShapeFilter> &filter) const
+{
+    struct Local
+    {
+        static void cb(cpShape *shape, void *user_data)
+        {
+            auto *obj = ChipmunkShape::get(shape);
+            ((Array*)user_data)->push_back(obj);
+        }
+    };
+
+    Array r;
+    cpSpaceBBQuery(space, CP(bb), CP(filter), &Local::cb, &r);
+    return r;
+}
+
+Array ChipmunkSpace::shape_query(ChipmunkShape *shape) const
+{
+    struct Local
+    {
+        static void cb(cpShape *shape, cpContactPointSet *points, void *user_data)
+        {
+            // TODO: return points as well
+            auto *obj = ChipmunkShape::get(shape);
+            ((Array*)user_data)->push_back(obj);
+        }
+    };
+
+    Array r;
+    ERR_FAIL_NULL_V(shape, r);
+    cpSpaceShapeQuery(space, *shape, &Local::cb, &r);
     return r;
 }
 
@@ -337,8 +403,14 @@ void ChipmunkSpace::_bind_methods()
     ObjectTypeDB::bind_method(_MD("remove_constraint", "constraint:ChipmunkConstraint"), &ChipmunkSpace::remove_constraint);
     ObjectTypeDB::bind_method(_MD("contains_constraint", "constraint:ChipmunkConstraint"), &ChipmunkSpace::contains_constraint);
 
-    ObjectTypeDB::bind_method(_MD("point_query", "point:Vector2", "maxDistance:real", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::point_query);
-    ObjectTypeDB::bind_method(_MD("point_query_nearest", "point:Vector2", "maxDistance:real", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::point_query_nearest);
+    ObjectTypeDB::bind_method(_MD("point_query:Array", "point:Vector2", "maxDistance:real", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::point_query);
+    ObjectTypeDB::bind_method(_MD("point_query_nearest:Dictionary", "point:Vector2", "maxDistance:real", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::point_query_nearest);
+
+    ObjectTypeDB::bind_method(_MD("segment_query:Array", "start:Vector2", "end:Vector2", "radius:real", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::segment_query);
+    ObjectTypeDB::bind_method(_MD("segment_query_first:Dictionary", "start:Vector2", "end:Vector2", "radius:real", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::segment_query_first);
+
+    ObjectTypeDB::bind_method(_MD("bb_query:Array", "bb:Rect2", "filter:ChipmunkShapeFilter"), &ChipmunkSpace::bb_query);
+    ObjectTypeDB::bind_method(_MD("shape_query:Array", "shape:ChipmunkShape"), &ChipmunkSpace::shape_query);
 
     ObjectTypeDB::bind_method(_MD("get_bodies:Array"), &ChipmunkSpace::get_bodies);
     ObjectTypeDB::bind_method(_MD("get_shapes:Array"), &ChipmunkSpace::get_shapes);

@@ -18,8 +18,12 @@ public:
     /** Chipmunk methods */
     Rect2 cache_bb();
     Rect2 update(const Matrix32&);
+    Rect2 get_bb() const;
 
     Dictionary point_query(const Vector2&) const;
+    Dictionary segment_query(const Vector2 &a, const Vector2 &b, float radius = .0f) const;
+
+    Dictionary collide(ChipmunkShape*) const;
 
     ChipmunkSpace *get_space() const;
     ChipmunkBody *get_body() const;
@@ -30,6 +34,10 @@ public:
     float get_density() const;
     void set_density(float);
 
+    float get_moment() const;
+    float get_area() const;
+    Vector2 get_center_of_gravity() const;
+
     bool get_sensor() const;
     void set_sensor(bool);
 
@@ -38,6 +46,9 @@ public:
 
     float get_friction() const;
     void set_friction(float);
+
+    Vector2 get_surface_velocity() const;
+    void set_surface_velocity(const Vector2&);
 
     Variant get_metadata() const;
     void set_metadata(const Variant&);

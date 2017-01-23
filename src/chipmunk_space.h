@@ -62,6 +62,13 @@ public:
     Array point_query(const Vector2 &point, float maxDistance, const Ref<ChipmunkShapeFilter> &filter) const;
     Dictionary point_query_nearest(const Vector2 &point, float maxDistance, const Ref<ChipmunkShapeFilter> &filter) const;
 
+    Array segment_query(const Vector2 &start, const Vector2 &end, float radius, const Ref<ChipmunkShapeFilter> &filter) const;
+    Dictionary segment_query_first(const Vector2 &start, const Vector2 &end, float radius, const Ref<ChipmunkShapeFilter> &filter) const;
+
+    Array bb_query(const Rect2 &bb, const Ref<ChipmunkShapeFilter> &filter) const;
+    
+    Array shape_query(ChipmunkShape *shape) const;
+
     Array get_bodies() const;
     Array get_shapes() const;
     Array get_constraints() const;

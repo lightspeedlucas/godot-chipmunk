@@ -23,6 +23,11 @@ Rect2 ChipmunkShape::update(const Matrix32 &value)
     return GD(cpShapeUpdate(shape, CP(value)));
 }
 
+Rect2 ChipmunkShape::get_bb() const
+{
+    return GD(cpShapeGetBB(shape));
+}
+
 Dictionary ChipmunkShape::point_query(const Vector2 &point) const
 {
     cpPointQueryInfo info;
@@ -32,6 +37,38 @@ Dictionary ChipmunkShape::point_query(const Vector2 &point) const
     r["point"] = GD(info.point);
     r["distance"] = info.distance;
     r["gradient"] = GD(info.gradient);
+    return r;
+}
+
+Dictionary ChipmunkShape::segment_query(const Vector2 &a, const Vector2 &b, float radius) const
+{
+    cpSegmentQueryInfo info;
+    cpShapeSegmentQuery(shape, CP(a), CP(b), radius, &info);
+    Dictionary r(true);
+    r["shape"] = this;
+    r["point"] = GD(info.point);
+    r["normal"] = GD(info.normal);
+    r["alpha"] = info.alpha;
+    return r;
+}
+
+Dictionary ChipmunkShape::collide(ChipmunkShape *other) const
+{
+    Dictionary r(true);
+    ERR_FAIL_NULL_V(other, r);
+    auto set = cpShapesCollide(*this, *other);
+    r["count"] = set.count;
+    r["normal"] = GD(set.normal);
+    Array points;
+    for (int i = 0; i < set.count; ++i)
+    {
+        Dictionary r(true);
+        r["pointA"] = GD(set.points[i].pointA);
+        r["pointB"] = GD(set.points[i].pointB);
+        r["distance"] = set.points[i].distance;
+        points.push_back(r);
+    }
+    r["points"] = points;
     return r;
 }
 
@@ -65,6 +102,21 @@ void ChipmunkShape::set_density(float value)
     cpShapeSetDensity(shape, value);
 }
 
+float ChipmunkShape::get_moment() const
+{
+    return cpShapeGetMoment(shape);
+}
+
+float ChipmunkShape::get_area() const
+{
+    return cpShapeGetArea(shape);
+}
+
+Vector2 ChipmunkShape::get_center_of_gravity() const
+{
+    return GD(cpShapeGetCenterOfGravity(shape));
+}
+
 bool ChipmunkShape::get_sensor() const
 {
     return cpShapeGetSensor(shape);
@@ -93,6 +145,16 @@ float ChipmunkShape::get_friction() const
 void ChipmunkShape::set_friction(float value)
 {
     cpShapeSetFriction(shape, value);
+}
+
+Vector2 ChipmunkShape::get_surface_velocity() const
+{
+    return GD(cpShapeGetSurfaceVelocity(shape));
+}
+
+void ChipmunkShape::set_surface_velocity(const Vector2 &value)
+{
+    cpShapeSetSurfaceVelocity(shape, CP(value));
 }
 
 Variant ChipmunkShape::get_metadata() const
@@ -130,8 +192,12 @@ void ChipmunkShape::_bind_methods()
 {
     ObjectTypeDB::bind_method(_MD("cache_bb:Rect2"), &ChipmunkShape::cache_bb);
     ObjectTypeDB::bind_method(_MD("update:Rect2", "transform:Matrix32"), &ChipmunkShape::update);
+    ObjectTypeDB::bind_method(_MD("get_bb:Rect2"), &ChipmunkShape::get_bb);
 
     ObjectTypeDB::bind_method(_MD("point_query:Dictionary", "point:Vector2"), &ChipmunkShape::point_query);
+    ObjectTypeDB::bind_method(_MD("segment_query:Dictionary", "a:Vector2", "b:Vector2", "radius:real"), &ChipmunkShape::segment_query, DEFVAL(.0f));
+
+    ObjectTypeDB::bind_method(_MD("collide:Dictionary", "shape:ChipmunkShape"), &ChipmunkShape::collide);
 
     ObjectTypeDB::bind_method(_MD("get_space"), &ChipmunkShape::get_space);
     ObjectTypeDB::bind_method(_MD("get_body"), &ChipmunkShape::get_body);
@@ -144,6 +210,10 @@ void ChipmunkShape::_bind_methods()
     ObjectTypeDB::bind_method(_MD("set_density", "density:real"), &ChipmunkShape::set_density);
     ADD_PROPERTY(PropertyInfo(Variant::REAL, "density"), _SCS("set_density"), _SCS("get_density"));
 
+    ObjectTypeDB::bind_method(_MD("get_moment:real"), &ChipmunkShape::get_moment);
+    ObjectTypeDB::bind_method(_MD("get_area:real"), &ChipmunkShape::get_area);
+    ObjectTypeDB::bind_method(_MD("get_center_of_gravity:Vector2"), &ChipmunkShape::get_center_of_gravity);
+
     ObjectTypeDB::bind_method(_MD("get_sensor"), &ChipmunkShape::get_sensor);
     ObjectTypeDB::bind_method(_MD("set_sensor", "sensor:bool"), &ChipmunkShape::set_sensor);
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sensor"), _SCS("set_sensor"), _SCS("get_sensor"));
@@ -155,6 +225,10 @@ void ChipmunkShape::_bind_methods()
     ObjectTypeDB::bind_method(_MD("get_friction"), &ChipmunkShape::get_friction);
     ObjectTypeDB::bind_method(_MD("set_friction", "friction:real"), &ChipmunkShape::set_friction);
     ADD_PROPERTY(PropertyInfo(Variant::REAL, "friction"), _SCS("set_friction"), _SCS("get_friction"));
+
+    ObjectTypeDB::bind_method(_MD("get_surface_velocity:Vector2"), &ChipmunkShape::get_surface_velocity);
+    ObjectTypeDB::bind_method(_MD("set_surface_velocity", "velocity:Vector2"), &ChipmunkShape::set_surface_velocity);
+    ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "surface_velocity"), _SCS("set_surface_velocity"), _SCS("get_surface_velocity"));
 
     ObjectTypeDB::bind_method(_MD("get_metadata"), &ChipmunkShape::get_metadata);
     ObjectTypeDB::bind_method(_MD("set_metadata", "metadata:Variant"), &ChipmunkShape::set_metadata);

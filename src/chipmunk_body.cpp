@@ -196,12 +196,12 @@ void ChipmunkBody::apply_impulse_at_local_point(const Vector2 &impulse, const Ve
 
 Vector2 ChipmunkBody::get_velocity_at_world_point(const Vector2 &point)
 {
-    cpBodyGetVelocityAtWorldPoint(body, CP(point));
+    return GD(cpBodyGetVelocityAtWorldPoint(body, CP(point)));
 }
 
 Vector2 ChipmunkBody::get_velocity_at_local_point(const Vector2 &point)
 {
-    cpBodyGetVelocityAtLocalPoint(body, CP(point));
+    return GD(cpBodyGetVelocityAtLocalPoint(body, CP(point)));
 }
 
 float ChipmunkBody::get_kinetic_energy() const
