@@ -132,26 +132,26 @@ bool ChipmunkCollisionHandler::BeginFunc(cpArbiter *arb, cpSpace *space, cpDataP
 {
     auto *handler = get(space, userData);
     ERR_FAIL_NULL_V(handler->begin_cb, true);
-    handler->begin_cb->call(/*arb*/);
+    handler->begin_cb->call(memnew(ChipmunkArbiter(arb)));
 }
 
 bool ChipmunkCollisionHandler::PreSolveFunc(cpArbiter *arb, cpSpace *space, cpDataPointer userData)
 {
     auto *handler = get(space, userData);
     ERR_FAIL_NULL_V(handler->pre_solve_cb, true);
-    handler->pre_solve_cb->call(/*arb*/);
+    handler->pre_solve_cb->call(memnew(ChipmunkArbiter(arb)));
 }
 
 void ChipmunkCollisionHandler::PostSolveFunc(cpArbiter *arb, cpSpace *space, cpDataPointer userData)
 {
     auto *handler = get(space, userData);
     ERR_FAIL_NULL(handler->post_solve_cb);
-    handler->post_solve_cb->call(/*arb*/);
+    handler->post_solve_cb->call(memnew(ChipmunkArbiter(arb)));
 }
 
 void ChipmunkCollisionHandler::SeparateFunc(cpArbiter *arb, cpSpace *space, cpDataPointer userData)
 {
     auto *handler = get(space, userData);
     ERR_FAIL_NULL(handler->separate_cb);
-    handler->separate_cb->call(/*arb*/);
+    handler->separate_cb->call(memnew(ChipmunkArbiter(arb)));
 }

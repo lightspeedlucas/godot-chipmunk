@@ -209,6 +209,54 @@ float ChipmunkBody::get_kinetic_energy() const
     return cpBodyKineticEnergy(body);
 }
 
+Array ChipmunkBody::get_shapes() const
+{
+    struct Local
+    {
+        static void cb(cpBody *body, cpShape *shape, void *user_data)
+        {
+            auto *obj = ChipmunkShape::get(shape);
+            ((Array*)user_data)->push_back(obj);
+        }
+    };
+
+    Array r;
+    cpBodyEachShape(body, &Local::cb, &r);
+    return r;
+}
+
+Array ChipmunkBody::get_constraints() const
+{
+    struct Local
+    {
+        static void cb(cpBody *body, cpConstraint *constraint, void *user_data)
+        {
+            auto *obj = ChipmunkConstraint::get(constraint);
+            ((Array*)user_data)->push_back(obj);
+        }
+    };
+
+    Array r;
+    cpBodyEachConstraint(body, &Local::cb, &r);
+    return r;
+}
+
+Array ChipmunkBody::get_arbiters() const
+{
+    struct Local
+    {
+        static void cb(cpBody *body, cpArbiter *arbiter, void *user_data)
+        {
+            Ref<ChipmunkArbiter> ref = memnew(ChipmunkArbiter(arbiter));
+            ((Array*)user_data)->push_back(ref);
+        }
+    };
+
+    Array r;
+    cpBodyEachArbiter(body, &Local::cb, &r);
+    return r;
+}
+
 void ChipmunkBody::_bind_methods()
 {
     ObjectTypeDB::bind_method(_MD("activate"), &ChipmunkBody::activate);
@@ -273,6 +321,10 @@ void ChipmunkBody::_bind_methods()
     ObjectTypeDB::bind_method(_MD("get_velocity_at_local_point", "point:Vector2"), &ChipmunkBody::get_velocity_at_local_point);
 
     ObjectTypeDB::bind_method(_MD("get_kinetic_energy"), &ChipmunkBody::get_kinetic_energy);
+
+    ObjectTypeDB::bind_method(_MD("get_shapes:Array"), &ChipmunkBody::get_shapes);
+    ObjectTypeDB::bind_method(_MD("get_constraints:Array"), &ChipmunkBody::get_constraints);
+    ObjectTypeDB::bind_method(_MD("get_arbiters:Array"), &ChipmunkBody::get_arbiters);
 
     ObjectTypeDB::bind_integer_constant(get_type_static(), "DYNAMIC", CP_BODY_TYPE_DYNAMIC);
     ObjectTypeDB::bind_integer_constant(get_type_static(), "KINEMATIC", CP_BODY_TYPE_KINEMATIC);

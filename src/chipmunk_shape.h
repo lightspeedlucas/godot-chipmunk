@@ -16,6 +16,11 @@ public:
     ~ChipmunkShape();
 
     /** Chipmunk methods */
+    Rect2 cache_bb();
+    Rect2 update(const Matrix32&);
+
+    Dictionary point_query(const Vector2&) const;
+
     ChipmunkSpace *get_space() const;
     ChipmunkBody *get_body() const;
 

@@ -62,6 +62,10 @@ public:
     Array point_query(const Vector2 &point, float maxDistance, const Ref<ChipmunkShapeFilter> &filter) const;
     Dictionary point_query_nearest(const Vector2 &point, float maxDistance, const Ref<ChipmunkShapeFilter> &filter) const;
 
+    Array get_bodies() const;
+    Array get_shapes() const;
+    Array get_constraints() const;
+
     void step(float dt);
 
 protected:

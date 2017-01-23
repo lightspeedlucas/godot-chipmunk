@@ -65,6 +65,10 @@ public:
 
     float get_kinetic_energy() const;
 
+    Array get_shapes() const;
+    Array get_constraints() const;
+    Array get_arbiters() const;
+
 protected:
     /** Godot bindings */
 	static void _bind_methods();

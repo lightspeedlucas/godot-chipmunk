@@ -100,6 +100,7 @@ class ChipmunkBody;
 class ChipmunkShape;
 class ChipmunkConstraint;
 class ChipmunkCollisionHandler;
+class ChipmunkArbiter;
 
 #include "src/chipmunk_space.h"
 #include "src/chipmunk_body.h"
@@ -107,6 +108,7 @@ class ChipmunkCollisionHandler;
 #include "src/chipmunk_constraint.h"
 
 #include "src/chipmunk_collision_handler.h"
+#include "src/chipmunk_arbiter.h"
 
 #include "src/chipmunk_pin_joint.h"
 

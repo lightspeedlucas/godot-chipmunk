@@ -13,6 +13,28 @@ ChipmunkShape::~ChipmunkShape()
     cpShapeFree(shape);
 }
 
+Rect2 ChipmunkShape::cache_bb()
+{
+    return GD(cpShapeCacheBB(shape));
+}
+
+Rect2 ChipmunkShape::update(const Matrix32 &value)
+{
+    return GD(cpShapeUpdate(shape, CP(value)));
+}
+
+Dictionary ChipmunkShape::point_query(const Vector2 &point) const
+{
+    cpPointQueryInfo info;
+    cpShapePointQuery(shape, CP(point), &info);
+    Dictionary r(true);
+    r["shape"] = this;
+    r["point"] = GD(info.point);
+    r["distance"] = info.distance;
+    r["gradient"] = GD(info.gradient);
+    return r;
+}
+
 ChipmunkSpace *ChipmunkShape::get_space() const
 {
     return ChipmunkSpace::get(cpShapeGetSpace(shape));
@@ -100,11 +122,17 @@ Ref<ChipmunkShapeFilter> ChipmunkShape::get_filter() const
 
 void ChipmunkShape::set_filter(const Ref<ChipmunkShapeFilter> &filter)
 {
+    ERR_FAIL_COND(filter.is_null());
     cpShapeSetFilter(shape, **filter);
 }
 
 void ChipmunkShape::_bind_methods()
 {
+    ObjectTypeDB::bind_method(_MD("cache_bb:Rect2"), &ChipmunkShape::cache_bb);
+    ObjectTypeDB::bind_method(_MD("update:Rect2", "transform:Matrix32"), &ChipmunkShape::update);
+
+    ObjectTypeDB::bind_method(_MD("point_query:Dictionary", "point:Vector2"), &ChipmunkShape::point_query);
+
     ObjectTypeDB::bind_method(_MD("get_space"), &ChipmunkShape::get_space);
     ObjectTypeDB::bind_method(_MD("get_body"), &ChipmunkShape::get_body);
 
@@ -149,28 +177,28 @@ ChipmunkShape *ChipmunkShape::get(const cpShape *shape)
 
 ChipmunkShape *ChipmunkShapeFactory::circle(ChipmunkBody *body, float radius, const Vector2 &offset)
 {
-    ERR_FAIL_NULL_V(body, NULL);
-    return wrap(cpCircleShapeNew(*body, radius, CP(offset)));
+    auto *owner = body ? (cpBody*)*body : NULL;
+    return wrap(cpCircleShapeNew(owner, radius, CP(offset)));
 }
 
 ChipmunkShape *ChipmunkShapeFactory::segment(ChipmunkBody *body, const Vector2 &a, const Vector2 &b, float radius)
 {
-    ERR_FAIL_NULL_V(body, NULL);
-    return wrap(cpSegmentShapeNew(*body, CP(a), CP(b), radius));
+    auto *owner = body ? (cpBody*)*body : NULL;
+    return wrap(cpSegmentShapeNew(owner, CP(a), CP(b), radius));
 }
 
 ChipmunkShape *ChipmunkShapeFactory::box(ChipmunkBody *body, const Rect2 &box, float radius)
 {
-    ERR_FAIL_NULL_V(body, NULL);
-    return wrap(cpBoxShapeNew2(*body, CP(box), radius));
+    auto *owner = body ? (cpBody*)*body : NULL;
+    return wrap(cpBoxShapeNew2(owner, CP(box), radius));
 }
 
 ChipmunkShape *ChipmunkShapeFactory::poly(ChipmunkBody *body, const Vector2Array &verts, float radius)
 {
-    ERR_FAIL_NULL_V(body, NULL);
+    auto *owner = body ? (cpBody*)*body : NULL;
     Vector2Array::Read r = verts.read();
     auto *cp_verts = reinterpret_cast<const cpVect*>(r.ptr());
-    return wrap(cpPolyShapeNewRaw(*body, verts.size(), cp_verts, radius));
+    return wrap(cpPolyShapeNewRaw(owner, verts.size(), cp_verts, radius));
 }
 
 void ChipmunkShapeFactory::_bind_methods()

@@ -27,6 +27,7 @@ void register_chipmunk_types()
     ObjectTypeDB::register_type<ChipmunkConstraintFactory>();
 
     ObjectTypeDB::register_virtual_type<ChipmunkCollisionHandler>();
+    ObjectTypeDB::register_virtual_type<ChipmunkArbiter>();
     ObjectTypeDB::register_type<ChipmunkShapeFilter>();
 
     // Little hack
