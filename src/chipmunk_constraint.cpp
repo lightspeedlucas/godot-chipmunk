@@ -120,5 +120,6 @@ ChipmunkConstraint *ChipmunkConstraint::get(const cpConstraint *constraint)
 
 void ChipmunkConstraintFactory::_bind_methods()
 {
-    ObjectTypeDB::bind_method(_MD("pin_joint:ChipmunkPinJoint", "body_a:ChipmunkBody", "body_b:[ChipmunkBody]", "anchor_a:Vector2", "anchor_b:Vector2"), &ChipmunkConstraintFactory::pin_joint);
+    ObjectTypeDB::bind_method(_MD("pin_joint:ChipmunkPinJoint", "body_a:ChipmunkBody", "body_b:ChipmunkBody", "anchor_a:Vector2", "anchor_b:Vector2"), &ChipmunkConstraintFactory::pin_joint);
+    ObjectTypeDB::bind_method(_MD("pivot_joint:ChipmunkPinJoint", "body_a:ChipmunkBody", "body_b:ChipmunkBody", "anchor_a:Vector2", "anchor_b:Vector2"), &ChipmunkConstraintFactory::pivot_joint);
 }
