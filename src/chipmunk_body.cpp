@@ -66,6 +66,11 @@ void ChipmunkBody::set_moment(float value)
     cpBodySetMoment(body, value);
 }
 
+void ChipmunkBody::set_moment_to_infinity()
+{
+    cpBodySetMoment(body, INFINITY);
+}
+
 Vector2 ChipmunkBody::get_position() const
 {
     return GD(cpBodyGetPosition(body));
@@ -275,6 +280,7 @@ void ChipmunkBody::_bind_methods()
 
     ObjectTypeDB::bind_method(_MD("get_moment"), &ChipmunkBody::get_moment);
     ObjectTypeDB::bind_method(_MD("set_moment", "moment:real"), &ChipmunkBody::set_moment);
+    ObjectTypeDB::bind_method(_MD("set_moment_to_infinity"), &ChipmunkBody::set_moment_to_infinity);
     ADD_PROPERTY(PropertyInfo(Variant::REAL, "moment"), _SCS("set_moment"), _SCS("get_moment"));
 
     ObjectTypeDB::bind_method(_MD("get_position"), &ChipmunkBody::get_position);

@@ -26,6 +26,7 @@ public:
 
     float get_moment() const;
     void set_moment(float);
+    void set_moment_to_infinity();
 
     Vector2 get_position() const;
     void set_position(const Vector2&);
