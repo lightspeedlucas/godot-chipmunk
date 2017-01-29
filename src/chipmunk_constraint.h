@@ -56,6 +56,7 @@ public:
     /** Factory methods */
     class ChipmunkPinJoint *pin_joint(ChipmunkBody *body_a, ChipmunkBody *body_b, const Vector2 &anchor_a, const Vector2 &anchor_b);
     class ChipmunkPivotJoint *pivot_joint(ChipmunkBody *body_a, ChipmunkBody *body_b, const Vector2 &anchor_a, const Vector2 &anchor_b);
+    class ChipmunkDampedSpring *damped_spring(ChipmunkBody *body_a, ChipmunkBody *body_b, const Vector2 &anchor_a, const Vector2 &anchor_b);
 
 protected:
     /** Godot bindings */

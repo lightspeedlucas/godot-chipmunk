@@ -7,10 +7,17 @@ ChipmunkSpace::ChipmunkSpace()
 {
     space = cpSpaceNew();
     cpSpaceSetUserData(space, get_instance_ID());
+
+    static_body = new ChipmunkBody();
+    static_body->set_body_type(CP_BODY_TYPE_STATIC);
+    add_body(static_body);
 }
 
 ChipmunkSpace::~ChipmunkSpace()
 {
+    remove_body(static_body);
+    delete static_body;
+
     List<uint32_t> keys;
 	collision_handlers.get_key_list(&keys);
 
@@ -108,6 +115,11 @@ Variant ChipmunkSpace::get_metadata() const
 void ChipmunkSpace::set_metadata(const Variant &value)
 {
     metadata = value;
+}
+
+ChipmunkBody *ChipmunkSpace::get_static_body() const
+{
+    return static_body;
 }
 
 float ChipmunkSpace::get_current_timestep() const
@@ -383,6 +395,8 @@ void ChipmunkSpace::_bind_methods()
 
     ObjectTypeDB::bind_method(_MD("get_metadata"), &ChipmunkSpace::get_metadata);
     ObjectTypeDB::bind_method(_MD("set_metadata", "metadata:Variant"), &ChipmunkSpace::set_metadata);
+
+    ObjectTypeDB::bind_method(_MD("get_static_body:ChipmunkBody"), &ChipmunkSpace::get_static_body);
 
     ObjectTypeDB::bind_method(_MD("get_current_timestep"), &ChipmunkSpace::get_current_timestep);
     ObjectTypeDB::bind_method(_MD("is_locked"), &ChipmunkSpace::is_locked);

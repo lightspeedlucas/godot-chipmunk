@@ -117,5 +117,6 @@ class ChipmunkArbiter;
 
 #include "src/chipmunk_pin_joint.h"
 #include "src/chipmunk_pivot_joint.h"
+#include "src/chipmunk_damped_spring.h"
 
 #endif

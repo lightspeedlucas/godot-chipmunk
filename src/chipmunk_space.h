@@ -40,6 +40,8 @@ public:
     Variant get_metadata() const;
     void set_metadata(const Variant&);
 
+    ChipmunkBody *get_static_body() const;
+
     float get_current_timestep() const;
     bool is_locked() const;
 
@@ -66,7 +68,7 @@ public:
     Dictionary segment_query_first(const Vector2 &start, const Vector2 &end, float radius, const Ref<ChipmunkShapeFilter> &filter) const;
 
     Array bb_query(const Rect2 &bb, const Ref<ChipmunkShapeFilter> &filter) const;
-    
+
     Array shape_query(ChipmunkShape *shape) const;
 
     Array get_bodies() const;
@@ -79,6 +81,7 @@ protected:
     /** Godot bindings */
 	static void _bind_methods();
     cpSpace *space;
+    ChipmunkBody *static_body;
     Variant metadata;
 
     /** Active collision handlers */
